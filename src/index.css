@@ -48,3 +48,21 @@ ol, ul {
 .game-info {
     margin-left: 20px;
 }  
+
+#size {
+    margin: 20px;
+}
+
+button#loginBtn,
+button#logoutBtn {
+    margin-bottom: 20px;
+}
+
+div.clock {
+    margin: 20px;
+    border: solid red 2px;
+    font-size: 24px;
+    width: fit-content;
+    padding: 15px;
+    font-weight: bold;
+}
