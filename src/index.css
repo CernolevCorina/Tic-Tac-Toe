@@ -66,3 +66,12 @@ div.clock {
     padding: 15px;
     font-weight: bold;
 }
+
+.warning{
+    margin: 0;
+    height: 50px;
+    background-color: red;
+    text-align: center;
+    font-weight: bold;
+    font-size: 30px;
+}
