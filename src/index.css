@@ -75,3 +75,21 @@ div.clock {
     font-weight: bold;
     font-size: 30px;
 }
+
+.fancyBorder {
+    padding: 10px 10px;
+    border: 10px solid;
+}
+  
+fancyBorderblue {
+    border-color: blue;
+}
+  
+.dialogTitle {
+    margin: 0;
+    font-family: sans-serif;
+}
+  
+.dialogMessage {
+    font-size: larger;
+}

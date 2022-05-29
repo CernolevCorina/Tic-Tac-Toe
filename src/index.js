@@ -315,10 +315,7 @@ class Page extends React.Component {
     }
 }
 
-
-
-
-
+//List
 const ListItem = (props) => {
     return <li>{props.value}</li>
 }
@@ -338,9 +335,7 @@ const NumberList = (props) => {
     )
 }
 
-
-
-
+//Blog
 const Blog = (props) => {
     const sidebar = (
         <ul>
@@ -373,6 +368,236 @@ const posts = [
     {id: 2, title: 'Installation', content: 'You can install React from npm.'}
 ];
 
+//NameForm
+class NameForm extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {value: ''};
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(event) {
+        this.setState({value: event.target.value});
+    }
+
+    handleSubmit(event) {
+        alert(`A name was submitted: ${this.state.value}`);
+        event.preventDefault();
+    }
+
+    render() {
+        return(
+            <form onSubmit={this.handleSubmit}>
+                <label>
+                    Name:
+                    <input type="text" value={this.state.value} onChange={this.handleChange} />
+                </label>
+                <input type="submit" value="Submit" />
+            </form>
+        )
+    }
+}
+
+class FlavorForm extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {value: 'coconut'};
+  
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+  
+    handleChange(event) {
+        this.setState({value: event.target.value});
+    }
+  
+    handleSubmit(event) {
+        alert('Your favorite flavor is: ' + this.state.value);
+        event.preventDefault();
+    }
+  
+    render() {
+        return (
+            <form onSubmit={this.handleSubmit}>
+                <label>
+                    Pick your favorite flavor:
+                    <select value={this.state.value} onChange={this.handleChange}>
+                        <option value="grapefruit">Grapefruit</option>
+                        <option value="lime">Lime</option>
+                        <option value="coconut">Coconut</option>
+                        <option value="mango">Mango</option>
+                    </select>
+                </label>
+                <input type="submit" value="Submit" />
+            </form>
+        );
+    }
+}
+
+
+
+//Lifting State Up
+const BoilingVerdict = (props) => {
+    if (props.celsius >= 100) {
+        return <p>The water would boil.</p>
+    }
+    return <p>The water would not boil.</p>
+}
+
+const scaleNames = {
+    c: 'Celsius',
+    f: 'Fahrenheit'
+}
+
+const toCelsius = (fahrenheit) => {
+    return (fahrenheit-32) * 5 / 9;
+}
+
+const toFahrenheit = (celsius) => {
+    return (celsius * 9 / 5) + 32;
+}
+
+const tryConvert = (temperature, convert) => {
+    const input = parseFloat(temperature);
+    if (Number.isNaN(input)) {
+        return "";
+    }
+    const output = convert(input);
+    const rounded = Math.round(output * 1000) / 1000;
+    return rounded.toString();
+}
+
+class TemmperatureInput extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        //Before: this.setState({temperature: e.target.value});
+        this.props.onTemperatureChange(e.target.value);
+    }
+
+    render() {
+        // Before: const temperature = this.state.temperature;
+        const temperature = this.props.temperature;
+        const scale = this.props.scale;
+        return(
+            <fieldset>
+                <legend>
+                    Enter temperature in {scaleNames[scale]}:
+                </legend>
+                <input
+                    value = {temperature}
+                    onChange={this.handleChange}
+                />
+            </fieldset>
+        );
+    }
+}
+
+class Calculator extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleCelsiusChange = this.handleCelsiusChange.bind(this);
+        this.handleFahrenheitChange = this.handleFahrenheitChange.bind(this);
+        this.state = {temperature: "", scale: 'c'};
+    }
+
+    handleCelsiusChange(temperature) {
+        this.setState({scale: 'c', temperature});
+    }
+
+    handleFahrenheitChange(temperature) {
+        this.setState({scale: 'f', temperature});
+    }
+
+    render() {
+        const scale = this.state.scale;
+        const temperature = this.state.temperature;
+        const celsius = scale === 'f' ? tryConvert(temperature, toCelsius) : temperature;
+        const fahrenheit = scale === 'c' ? tryConvert(temperature, toFahrenheit) : temperature;
+        return (
+            <div>
+                <TemmperatureInput 
+                    scale="c" 
+                    temperature={celsius}
+                    onTemperatureChange={this.handleCelsiusChange}
+                />
+                <TemmperatureInput
+                    scale='f'
+                    temperature={fahrenheit}
+                    onTemperatureChange={this.handleFahrenheitChange}
+                />
+                <BoilingVerdict
+                    celsius={parseFloat(celsius)}
+                />
+            </div>
+        )
+    }
+}
+
+
+
+//Composition vs Inheritance
+const FancyBorder = (props) => {
+    return (
+        <div className={`fancyBorder fancyBorder${props.color}`}>
+            {props.children}
+        </div>
+    );
+}
+
+const Dialog = (props) => {
+    return (
+        <FancyBorder color="blue">
+            <h1 className='dialogTitle'>
+                {props.title}
+            </h1>
+            <p className='dialogMessage'>
+                {props.message}
+            </p>
+            {props.children}
+        </FancyBorder>
+    )
+}
+
+class SignUpDialog extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleChange=this.handleChange.bind(this);
+        this.handleSignUp=this.handleSignUp.bind(this);
+        this.state = {login: ''};
+    }
+
+    handleChange(e) {
+        this.setState({login: e.target.value});
+    }
+
+    handleSignUp() {
+        alert(`Welcome aboard, ${this.state.login}!`);
+    }
+
+    render() {
+        return (
+            <Dialog
+                title='Mars Exploration Program'
+                message='How should we refer to you?'
+            >
+                <input
+                    value={this.state.login}
+                    onChange={this.handleChange}
+                />
+                <button onClick={this.handleSignUp}>
+                    Sign Me Up!
+                </button>
+            </Dialog>
+        );
+    }
+}
+
 const Content = () => {
     return(
         <div>
@@ -383,6 +608,10 @@ const Content = () => {
             <Toggle />
             <NumberList numbers={numbers}/>
             <Blog posts={posts} />
+            <NameForm/>
+            <FlavorForm/>
+            <Calculator/>
+            <SignUpDialog/>
         </div>
     )
 }
