@@ -315,6 +315,29 @@ class Page extends React.Component {
     }
 }
 
+
+
+
+
+const ListItem = (props) => {
+    return <li>{props.value}</li>
+}
+
+const numbers = [1, 2, 3, 4, 5];
+
+const NumberList = (props) => {
+    const numbers = props.numbers;
+    const listItems = numbers.map((number) =>
+    <ListItem key={number.toString()} value={number} />
+    )
+
+    return (
+        <ul>
+            {listItems}
+        </ul>
+    )
+}
+
 const Content = () => {
     return(
         <div>
@@ -323,6 +346,7 @@ const Content = () => {
             <Game />
             <Clock />
             <Toggle />
+            <NumberList numbers={numbers}/>
         </div>
     )
 }
